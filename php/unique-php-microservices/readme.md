@@ -40,4 +40,18 @@ http://127.0.0.1:8101/users/1 → should return Alice/Eve (depending on your see
 
 http://127.0.0.1:8102/products/1 → should return Widget/Book.
 
+
 http://127.0.0.1:8103/?user=1&product=1 → should aggregate both.
+
+
+-running locust
+
+from locust import HttpUser, task, between
+
+class GatewayUser(HttpUser):
+    wait_time = between(1, 3)
+
+    @task
+    def get_user_and_product(self):
+        # Calls the gateway service (adjust ports if different)
+        self.client.get("/?user=1&product=1")
